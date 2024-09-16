@@ -112,7 +112,6 @@ def select_color(entry):
         entry.delete(0, tk.END)
         entry.insert(0, color)
 
-# GUI setup
 root = tk.Tk()
 root.title("Poster Generator")
 root.geometry("600x800")
