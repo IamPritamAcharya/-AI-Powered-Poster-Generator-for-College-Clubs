@@ -16,8 +16,7 @@ def generate_image(prompt_user, logo1_path, logo2_path, font_large_path, font_sm
     folder_path = os.path.join(os.getcwd(), 'image_gen')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-    
-    # Delete existing images in the folder
+   
     for filename in os.listdir(folder_path):
         if filename.endswith('.png'):
             os.remove(os.path.join(folder_path, filename))
@@ -33,17 +32,14 @@ def generate_image(prompt_user, logo1_path, logo2_path, font_large_path, font_sm
         num_inference_steps=4,
         api_name="/infer"
     )
-    
-    # Load the generated image
+
     image_path = result[0]  
     with Image.open(image_path) as img:
         new_image_path = os.path.join(folder_path, 'generated_image.png')
-        
-        # Load the logos or use default ones
+     
         logo1 = Image.open(logo1_path) if logo1_path else Image.open('logo1.png')
         logo2 = Image.open(logo2_path) if logo2_path else Image.open('logo2.png')
-        
-        # Resize logos
+
         logo_size = (int(img.width * 0.12), int(img.height * 0.12))  
         logo1 = logo1.resize(logo_size, Image.LANCZOS)
         logo2 = logo2.resize(logo_size, Image.LANCZOS)
@@ -62,8 +58,7 @@ def generate_image(prompt_user, logo1_path, logo2_path, font_large_path, font_sm
         
         text_large = large_text if large_text else "MyComp Society"
         text_small = small_text if small_text else "wishes you"
-        
-        # Calculate text sizes
+
         text_large_bbox = draw.textbbox((0, 0), text_large, font=font_large)
         text_large_width = text_large_bbox[2] - text_large_bbox[0]
         text_large_height = text_large_bbox[3] - text_large_bbox[1]
@@ -71,18 +66,15 @@ def generate_image(prompt_user, logo1_path, logo2_path, font_large_path, font_sm
         text_small_bbox = draw.textbbox((0, 0), text_small, font=font_small)
         text_small_width = text_small_bbox[2] - text_small_bbox[0]
         text_small_height = text_small_bbox[3] - text_small_bbox[1]
-        
-        # Calculate the positions for the texts
+
         text_center_x = (logo1_position[0] + logo_size[0] + logo2_position[0]) // 2
-        
-        # Position text_large and text_small
+
         text_large_x = text_center_x - text_large_width // 2
         text_large_y = logo1_position[1] + (logo_size[1] - text_large_height) // 2
         
         text_small_x = text_center_x - text_small_width // 2
-        text_small_y = text_large_y + text_large_height + 10  # Add spacing between large and small text
+        text_small_y = text_large_y + text_large_height + 10 
         
-        # Draw the text with the selected colors
         draw.text((text_large_x, text_large_y), text_large, font=font_large, fill=large_text_color)
         draw.text((text_small_x, text_small_y), text_small, font=font_small, fill=small_text_color)
         
@@ -116,7 +108,7 @@ root = tk.Tk()
 root.title("Poster Generator")
 root.geometry("600x800")
 
-# Apply the Sun Valley theme using sv-ttk
+
 sv_ttk.set_theme("dark")
 
 # Input frame
@@ -159,7 +151,6 @@ ttk.Label(input_frame, text="Small Text:").grid(row=6, column=0, sticky=tk.W, pa
 small_text_entry = ttk.Entry(input_frame, width=40)
 small_text_entry.grid(row=6, column=1, pady=5)
 
-# Color selection
 ttk.Label(input_frame, text="Large Text Color:").grid(row=7, column=0, sticky=tk.W, pady=5)
 large_text_color_entry = ttk.Entry(input_frame, width=40)
 large_text_color_entry.grid(row=7, column=1, pady=5)
@@ -175,11 +166,10 @@ small_text_color_button.grid(row=8, column=2, padx=5)
 status_label = ttk.Label(root, text="")
 status_label.pack(pady=5)
 
-# Image display
 img_label = ttk.Label(root)
 img_label.pack(pady=20)
 
-# Button to generate the poster
+
 generate_button = ttk.Button(root, text="Generate Poster", command=lambda: update_image_on_gui(
     generate_image(
         prompt_entry.get(),
